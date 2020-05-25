@@ -1,6 +1,7 @@
 import copy
 import torch
 import random
+import config
 import numpy as np
 import torch.optim as optim
 import torch.nn.functional as F
@@ -8,13 +9,13 @@ import torch.nn.functional as F
 from collections import namedtuple, deque
 from model import Actor, Critic
 
-BUFFER_SIZE = int(1e5)  # replay buffer size
-BATCH_SIZE = 250         # minibatch size
-GAMMA = 0.99            # discount factor
-TAU = 1e-3              # for soft update of target parameters
-LR_ACTOR = 1e-4         # learning rate of the actor
-LR_CRITIC = 1e-3        # learning rate of the critic 2539
-WEIGHT_DECAY = 0        # L2 weight decay
+BUFFER_SIZE = config.BUFFER_SIZE        # replay buffer size
+BATCH_SIZE = config.BATCH_SIZE          # minibatch size
+GAMMA = config.GAMMA                    # discount factor
+TAU = config.TAU                        # for soft update of target parameters
+LR_ACTOR = config.LR_ACTOR              # learning rate of the actor
+LR_CRITIC = config.LR_CRITIC            # learning rate of the critic 2539
+WEIGHT_DECAY = config.WEIGHT_DECAY      # L2 weight decay
 
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
