@@ -1,6 +1,7 @@
 import numpy as np
 
 import torch
+import config
 import torch.nn as nn
 import torch.nn.functional as F
 
@@ -13,7 +14,7 @@ def hidden_init(layer):
 
 class Actor(nn.Module):
 
-    def __init__(self, state_size, action_size, fc1_units=200, fc2_units=150):
+    def __init__(self, state_size, action_size, fc1_units=config.F_LINEAR, fc2_units=config.S_LINEAR):
         super().__init__()
         self.fc1 = nn.Linear(state_size, fc1_units)
         self.fc2 = nn.Linear(fc1_units, fc2_units)
@@ -33,7 +34,7 @@ class Actor(nn.Module):
 
 class Critic(nn.Module):
 
-    def __init__(self, state_size, action_size, fcs1_units=200, fc2_units=150):
+    def __init__(self, state_size, action_size, fcs1_units=config.F_LINEAR, fc2_units=config.S_LINEAR):
         super().__init__()
         self.fcs1 = nn.Linear((state_size+action_size)
                               * 2, fcs1_units)
