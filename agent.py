@@ -27,6 +27,7 @@ class OUNoise:
 
     def __init__(self, size, mu=0., theta=0.15, sigma=0.2):
         """Initialize parameters and noise process."""
+        super().__init__()
         self.mu = mu * np.ones(size)
         self.theta = theta
         self.sigma = sigma
@@ -56,6 +57,7 @@ class ReplayBuffer:
             buffer_size (int): maximum size of buffer
             batch_size (int): size of each training batch
         """
+        super().__init__()
         self.memory = deque(maxlen=buffer_size)  # internal memory (deque)
         self.batch_size = batch_size
         self.experience = namedtuple("Experience", field_names=[
@@ -98,6 +100,7 @@ sharedBuffer = ReplayBuffer(BUFFER_SIZE, BATCH_SIZE)
 class DDPGAgent():
 
     def __init__(self, state_size, action_size, num_agents):
+        super().__init__()
         self.state_size = state_size
         self.action_size = action_size
         self.num_agents = num_agents
@@ -211,6 +214,7 @@ class DDPGAgent():
 class MADDPG:
 
     def __init__(self, num_agents, state_size, action_size):
+        super().__init__()
         self.num_agents = num_agents
         self.state_size = state_size
         self.action_size = action_size
