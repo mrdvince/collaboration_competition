@@ -66,11 +66,8 @@ class ReplayBuffer:
         e = self.experience(state, action, reward, next_state, done)
         self.memory.append(e)
 
-    def sample(self, num_agents):
-        """Randomly sample a batch of experiences from memory."""
-
-        experiences = random.sample(self.memory, k=self.batch_size)
-
+    def convert_to_tensor(self, experiences, num_agents):
+        """Returns (states_list, actions_list, rewards, next_states_list, dones) as torch tensors"""
         states_list = [torch.from_numpy(np.vstack([e.states[index] for e in experiences if e is not None])).float(
         ).to(device) for index in range(num_agents)]
         actions_list = [torch.from_numpy(np.vstack([e.actions[index] for e in experiences if e is not None])).float(
@@ -83,6 +80,12 @@ class ReplayBuffer:
             [e.dones for e in experiences if e is not None]).astype(np.uint8)).float().to(device)
 
         return (states_list, actions_list, rewards, next_states_list, dones)
+
+    def sample(self, num_agents):
+        """Randomly sample a batch of experiences from memory."""
+        experiences = random.sample(self.memory, k=self.batch_size)
+
+        return self.convert_to_tensor(experiences=experiences, num_agents=num_agents)
 
     def __len__(self):
         """Return the current size of internal memory."""
