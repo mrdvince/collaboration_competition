@@ -15,9 +15,7 @@ TAU = 1e-3              # for soft update of target parameters
 LR_ACTOR = 1e-4         # learning rate of the actor
 LR_CRITIC = 1e-3        # learning rate of the critic 2539
 WEIGHT_DECAY = 0        # L2 weight decay
-num_agents = 2
-state_size = 24
-action_size = 2
+
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
@@ -68,7 +66,7 @@ class ReplayBuffer:
         e = self.experience(state, action, reward, next_state, done)
         self.memory.append(e)
 
-    def sample(self):
+    def sample(self,num_agents):
         """Randomly sample a batch of experiences from memory."""
 
         experiences = random.sample(self.memory, k=self.batch_size)
@@ -90,12 +88,16 @@ class ReplayBuffer:
         """Return the current size of internal memory."""
         return len(self.memory)
 
+
 sharedBuffer = ReplayBuffer(BUFFER_SIZE, BATCH_SIZE)
+
+
 class DDPGAgent():
 
-    def __init__(self, state_size, action_size, random_seed):
+    def __init__(self, state_size, action_size,num_agents, random_seed):
         self.state_size = state_size
         self.action_size = action_size
+        self.num_agents = num_agents
 
         # Construct Actor networks
         self.actor_local = Actor(
@@ -118,7 +120,7 @@ class DDPGAgent():
 
     def step(self):
         if len(sharedBuffer) > BATCH_SIZE:
-            experiences = sharedBuffer.sample()
+            experiences = sharedBuffer.sample(self.num_agents)
             self.learn(experiences, GAMMA)
 
     def act(self, state, add_noise=True):
@@ -205,9 +207,13 @@ class DDPGAgent():
 
 class MADDPG:
 
-    def __init__(self, random_seed):
-        self.agents = [DDPGAgent(state_size, action_size, random_seed)
-                       for x in range(num_agents)]
+    def __init__(self, num_agents, state_size, action_size, random_seed):
+        self.num_agents = num_agents
+        self.state_size = state_size
+        self.action_size = action_size
+
+        self.agents = [DDPGAgent(state_size=self.state_size, action_size=self.action_size,num_agents=self.num_agents, random_seed=random_seed)
+                       for x in range(self.num_agents)]
 
     def step(self, states, actions, rewards, next_states, dones):
 
@@ -217,7 +223,7 @@ class MADDPG:
             agent.step()
 
     def act(self, states, add_noise=True):
-        actions = np.zeros([num_agents, action_size])
+        actions = np.zeros([self.num_agents, self.action_size])
         for index, agent in enumerate(self.agents):
             actions[index, :] = agent.act(states[index], add_noise)
         return actions
