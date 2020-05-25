@@ -66,7 +66,7 @@ class ReplayBuffer:
         e = self.experience(state, action, reward, next_state, done)
         self.memory.append(e)
 
-    def sample(self,num_agents):
+    def sample(self, num_agents):
         """Randomly sample a batch of experiences from memory."""
 
         experiences = random.sample(self.memory, k=self.batch_size)
@@ -94,7 +94,7 @@ sharedBuffer = ReplayBuffer(BUFFER_SIZE, BATCH_SIZE)
 
 class DDPGAgent():
 
-    def __init__(self, state_size, action_size,num_agents, random_seed):
+    def __init__(self, state_size, action_size, num_agents, random_seed):
         self.state_size = state_size
         self.action_size = action_size
         self.num_agents = num_agents
@@ -212,7 +212,7 @@ class MADDPG:
         self.state_size = state_size
         self.action_size = action_size
 
-        self.agents = [DDPGAgent(state_size=self.state_size, action_size=self.action_size,num_agents=self.num_agents, random_seed=random_seed)
+        self.agents = [DDPGAgent(state_size=self.state_size, action_size=self.action_size, num_agents=self.num_agents, random_seed=random_seed)
                        for x in range(self.num_agents)]
 
     def step(self, states, actions, rewards, next_states, dones):
