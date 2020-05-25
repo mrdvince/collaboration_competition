@@ -25,12 +25,11 @@ class OUNoise:
 
     """Ornstein-Uhlenbeck process."""
 
-    def __init__(self, size, seed, mu=0., theta=0.15, sigma=0.2):
+    def __init__(self, size, mu=0., theta=0.15, sigma=0.2):
         """Initialize parameters and noise process."""
         self.mu = mu * np.ones(size)
         self.theta = theta
         self.sigma = sigma
-        self.seed = random.seed(seed)
         self.size = size
         self.reset()
 
@@ -95,29 +94,29 @@ sharedBuffer = ReplayBuffer(BUFFER_SIZE, BATCH_SIZE)
 
 class DDPGAgent():
 
-    def __init__(self, state_size, action_size, num_agents, random_seed):
+    def __init__(self, state_size, action_size, num_agents):
         self.state_size = state_size
         self.action_size = action_size
         self.num_agents = num_agents
 
         # Construct Actor networks
         self.actor_local = Actor(
-            state_size, action_size, random_seed).to(device)
+            state_size, action_size).to(device)
         self.actor_target = Actor(
-            state_size, action_size, random_seed).to(device)
+            state_size, action_size).to(device)
         self.actor_optimizer = optim.Adam(
             self.actor_local.parameters(), lr=LR_ACTOR)
 
         # Construct Critic networks
         self.critic_local = Critic(
-            state_size, action_size, random_seed).to(device)
+            state_size, action_size).to(device)
         self.critic_target = Critic(
-            state_size, action_size, random_seed).to(device)
+            state_size, action_size).to(device)
         self.critic_optimizer = optim.Adam(
             self.critic_local.parameters(), lr=LR_CRITIC, weight_decay=WEIGHT_DECAY)
 
         # noise processing
-        self.noise = OUNoise(action_size, random_seed)
+        self.noise = OUNoise(action_size)
 
     def step(self):
         if len(sharedBuffer) > BATCH_SIZE:
@@ -208,12 +207,12 @@ class DDPGAgent():
 
 class MADDPG:
 
-    def __init__(self, num_agents, state_size, action_size, random_seed):
+    def __init__(self, num_agents, state_size, action_size):
         self.num_agents = num_agents
         self.state_size = state_size
         self.action_size = action_size
 
-        self.agents = [DDPGAgent(state_size=self.state_size, action_size=self.action_size, num_agents=self.num_agents, random_seed=random_seed)
+        self.agents = [DDPGAgent(state_size=self.state_size, action_size=self.action_size, num_agents=self.num_agents)
                        for x in range(self.num_agents)]
 
     def step(self, states, actions, rewards, next_states, dones):
