@@ -15,6 +15,9 @@ TAU = 1e-3              # for soft update of target parameters
 LR_ACTOR = 1e-4         # learning rate of the actor
 LR_CRITIC = 1e-3        # learning rate of the critic 2539
 WEIGHT_DECAY = 0        # L2 weight decay
+num_agents = 2
+state_size = 24
+action_size = 2
 
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
@@ -87,10 +90,7 @@ class ReplayBuffer:
         """Return the current size of internal memory."""
         return len(self.memory)
 
-
 sharedBuffer = ReplayBuffer(BUFFER_SIZE, BATCH_SIZE)
-
-
 class DDPGAgent():
 
     def __init__(self, state_size, action_size, random_seed):
@@ -205,7 +205,7 @@ class DDPGAgent():
 
 class MADDPG:
 
-    def __init__(self, num_agents, state_size, action_size, random_seed):
+    def __init__(self, random_seed):
         self.agents = [DDPGAgent(state_size, action_size, random_seed)
                        for x in range(num_agents)]
 
