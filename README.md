@@ -80,9 +80,7 @@ python -m ipykernel install --user --name drlnd --display-name "drlnd"
 
 Follow the instructions in `Tennis.ipynb` to get started with training your own agent!  
 
-### (Optional) Challenge: Soccer Environment
-
-After completion, you might like to solve the more difficult **Soccer** environment.
+### Soccer Environment
 
 ![Soccer][image2]
 
