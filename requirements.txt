@@ -2,7 +2,7 @@ astroid==2.4.1
 attrs==19.3.0
 autopep8==1.5.2
 backcall==0.1.0
-bleach==3.1.5
+bleach==3.3.0
 Box2D==2.3.10
 Box2D-kengz==2.3.3
 certifi==2020.4.5.1
